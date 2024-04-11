@@ -2,6 +2,7 @@ require("dotenv/config")
 const { BinanceWallet } = require("./lib/binance");
 const { GateWallet } = require("./lib/gate");
 const { MexcWallet, mexcClient } = require("./lib/mexc");
+const { BybitWallet } = require("./lib/bybit");
 const fs = require("fs");
 
 const CURRENCIES = JSON.parse(fs.readFileSync("wallet.json", "utf8"));
@@ -30,10 +31,20 @@ function log() {
   console.log('=============');
 
   console.log(
-    "Total:",
+    "Total (USDT included):",
     Object.values(CURRENCIES).reduce(
       (acc, currency) => acc + currency.total,
       CURRENCIES.USDT.amount
+    ),
+  );
+
+  console.log('=============');
+
+  console.log(
+    "Total:",
+    Object.values(CURRENCIES).reduce(
+      (acc, currency) => acc + currency.total,
+      0
     ),
   );
 
@@ -56,6 +67,9 @@ async function main() {
 
   const mexcCurrencies = await MexcWallet.getListCurrency();
   insertCurrencies(mexcCurrencies);
+
+  const bybitCurrency = await BybitWallet.getListCurrency();
+  insertCurrencies(bybitCurrency);
 
   const binanceCurrency = await BinanceWallet.getListCurrency();
   insertCurrencies(binanceCurrency);
