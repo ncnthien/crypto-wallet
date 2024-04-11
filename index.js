@@ -33,7 +33,7 @@ function log() {
     "Total:",
     Object.values(CURRENCIES).reduce(
       (acc, currency) => acc + currency.total,
-      CURRENCIES.USDT.total
+      CURRENCIES.USDT.amount
     ),
   );
 
@@ -49,7 +49,7 @@ function log() {
 }
 
 async function main() {
-  console.log('Loading...');
+  console.log('Start...');
 
   const gateCurrencies = await GateWallet.getListCurrency();
   insertCurrencies(gateCurrencies);
