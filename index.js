@@ -12,6 +12,9 @@ function insertCurrencies(currencies) {
     if (CURRENCIES[currency.name]) {
       CURRENCIES[currency.name].amount =
         CURRENCIES[currency.name].amount + Number(currency.amount);
+      if (currency.name === "USDT") {
+        CURRENCIES[currency.name].cost = CURRENCIES[currency.name].amount;
+      }
     }
   });
 }
@@ -40,7 +43,7 @@ function log() {
       averagePrice: currency.cost / currency.amount,
       total: currency.total,
       cost: currency.cost,
-      currentPercent: currency.cost * 100 / (CURRENCIES.USDT.amount + totalCost),
+      currentPercent: currency.cost * 100 / totalCost,
     }))
   );
 
