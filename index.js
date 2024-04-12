@@ -17,45 +17,52 @@ function insertCurrencies(currencies) {
 }
 
 function log() {
+  const totalWithUSDT = Object.values(CURRENCIES).reduce(
+    (acc, currency) => acc + currency.total,
+    CURRENCIES.USDT.amount
+  )
+
+  const total = Object.values(CURRENCIES).reduce(
+    (acc, currency) => acc + currency.total,
+    0
+  )
+  
+  const totalCost = Object.values(CURRENCIES).reduce(
+    (acc, currency) => acc + currency.cost,
+    0
+  )
+
   console.table(
     Object.entries(CURRENCIES).map(([key, currency]) => ({
       name: key,
       amount: currency.amount,
       price: currency.price,
+      averagePrice: currency.cost / currency.amount,
       total: currency.total,
       cost: currency.cost,
-    })),
-    ['name', 'amount', 'price', 'total', 'cost']
+      currentPercent: currency.cost * 100 / (CURRENCIES.USDT.amount + totalCost),
+    }))
   );
 
   console.log('=============');
 
   console.log(
     "Total (USDT included):",
-    Object.values(CURRENCIES).reduce(
-      (acc, currency) => acc + currency.total,
-      CURRENCIES.USDT.amount
-    ),
+    totalWithUSDT
   );
 
   console.log('=============');
 
   console.log(
     "Total:",
-    Object.values(CURRENCIES).reduce(
-      (acc, currency) => acc + currency.total,
-      0
-    ),
+    total
   );
 
   console.log('=============');
 
   console.log(
     "Cost:", 
-    Object.values(CURRENCIES).reduce(
-      (acc, currency) => acc + currency.cost,
-      CURRENCIES.USDT.cost
-    )
+    totalCost
   );
 }
 
