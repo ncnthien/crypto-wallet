@@ -30,10 +30,15 @@ function log() {
     0
   )
   
-  const totalCost = Object.values(CURRENCIES).reduce(
+  const totalCostWithUSDT = Object.values(CURRENCIES).reduce(
     (acc, currency) => acc + currency.cost,
     0
   )
+
+  const totalCost = Object.values(CURRENCIES).reduce(
+    (acc, currency) => acc + currency.cost,
+    0
+  ) - CURRENCIES.USDT.amount;
 
   console.table(
     Object.entries(CURRENCIES).map(([key, currency]) => ({
@@ -43,7 +48,7 @@ function log() {
       averagePrice: currency.cost / currency.amount,
       total: currency.total,
       cost: currency.cost,
-      currentPercent: currency.cost * 100 / totalCost,
+      currentPercent: currency.cost * 100 / totalCostWithUSDT,
     }))
   );
 
@@ -54,14 +59,15 @@ function log() {
     totalWithUSDT
   );
 
-  console.log('=============');
-
   console.log(
     "Total:",
     total
   );
 
-  console.log('=============');
+  console.log(
+    "Cost (USDT included):", 
+    totalCostWithUSDT
+  );
 
   console.log(
     "Cost:", 
