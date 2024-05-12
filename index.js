@@ -1,7 +1,6 @@
 require("dotenv/config")
-const { BinanceWallet } = require("./lib/binance");
-const { GateWallet } = require("./lib/gate");
-const { MexcWallet, mexcClient } = require("./lib/mexc");
+const { BinanceWallet, BinanceClient } = require("./lib/binance");
+const { GateWallet } = require("./lib/gate"); const { MexcWallet, MexcClient } = require("./lib/mexc");
 const { BybitWallet } = require("./lib/bybit");
 const fs = require("fs");
 
@@ -71,6 +70,13 @@ function log() {
   );
 }
 
+async function getTickerPrice(symbol) {
+  return await Promise.any([
+    BinanceClient.getSymbolPriceTicker({ symbol: symbol + "USDT" }),
+    (async () => await MexcClient.tickerPrice(symbol + "USDT"))()
+  ])
+}
+
 async function main() {
   console.log('Start...');
 
@@ -89,7 +95,7 @@ async function main() {
   await Promise.all(
     Object.entries(CURRENCIES).map(async ([key, currency]) => {
       try {
-        const data = await mexcClient.tickerPrice(key + "USDT");
+        const data = await getTickerPrice(key);
         CURRENCIES[key].total = Number(data.price) * currency.amount;
         CURRENCIES[key].price = Number(data.price);
       } catch (error) {}
